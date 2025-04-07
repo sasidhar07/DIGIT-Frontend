@@ -1,4 +1,4 @@
-import {  Loader} from "@egovernments/digit-ui-components";
+import { Loader } from "@egovernments/digit-ui-components";
 import React from "react";
 import { useRouteMatch } from "react-router-dom";
 import { default as EmployeeApp } from "./pages/employee";
@@ -8,21 +8,21 @@ import ViewEstimateComponent from "./components/ViewEstimateComponent";
 import { overrideHooks, updateCustomConfigs } from "./utils";
 import AdditionalComponentWrapper from "./components/AdditionalComponent";
 import SampleMultiComponent from "./components/SampleMultiComponent";
+import AdditionalComplaint from "./components/AddComplaint";
 
 // SampleModule component manages the initialization and rendering of the module
 export const SampleModule = ({ stateCode, userType, tenants }) => {
   // Get the current route path and URL using React Router
   const { path, url } = useRouteMatch();
-  
+
   // Get the currently selected tenant ID from DIGIT's ULB Service
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  
   // Define the modules that this component depends on
   const moduleCode = ["sample", "common", "workflow"];
-  
+
   // Get the current language selected in the DIGIT Store
   const language = Digit.StoreData.getCurrentLanguage();
-  
+
   // Fetch module-specific store data
   const { isLoading, data: store } = Digit.Services.useStore({
     stateCode,
@@ -32,7 +32,7 @@ export const SampleModule = ({ stateCode, userType, tenants }) => {
 
   // Display a loader until the data is available
   if (isLoading) {
-    return  <Loader page={true} variant={"PageLoader"}/>;
+    return <Loader page={true} variant={"PageLoader"} />;
   }
 
   // Render the EmployeeApp component with required props
@@ -47,16 +47,17 @@ const componentsToRegister = {
   ViewEstimatePage: ViewEstimateComponent,
   SampleAdditionalComponent: AdditionalComponentWrapper,
   SampleMultiComponent: SampleMultiComponent,
+  AdditionalComplaintType:AdditionalComplaint
 };
 
 // Initialize and register module components
 export const initSampleComponents = () => {
   // Apply custom hooks overrides
   overrideHooks();
-  
+
   // Update custom configurations
   updateCustomConfigs();
-  
+
   // Register each component with the DIGIT Component Registry
   Object.entries(componentsToRegister).forEach(([key, value]) => {
     Digit.ComponentRegistryService.setComponent(key, value);

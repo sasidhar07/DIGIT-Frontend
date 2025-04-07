@@ -1,4 +1,4 @@
-import { Button, Dropdown, LabelFieldPair, TextInput, CustomSVG, Card,HeaderComponent } from "@egovernments/digit-ui-components";
+import { Button, Dropdown, LabelFieldPair, TextInput, CustomSVG, Card, HeaderComponent } from "@egovernments/digit-ui-components";
 import React, { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -85,11 +85,11 @@ const AdditionalComponent = ({ onSelect, ...props }) => {
   useEffect(() => {
     onSelect("additionalDetails", documentData);
   }, [documentData]);
-  
+
   return (
     <>
       {documentData?.map((item, index) => (
-        <Card type="secondary" style={{ marginBottom: "1.5rem",gap:"1.5rem"}}>
+        <Card type="secondary" style={{ marginBottom: "1.5rem", gap: "1.5rem" }}>
           {documentData?.length > 1 ? (
             <div className="delete-resource-icon" style={{ textAlign: "right" }} onClick={() => deleteItem(item, index)}>
               <CustomSVG.DustbinIcon />
@@ -119,11 +119,11 @@ const AdditionalComponent = ({ onSelect, ...props }) => {
               </div>
             </HeaderComponent>
             <div className="digit-field">
-            <TextInput
-              name="name"
-              value={item?.value || ""}
-              onChange={(event) => handleUpdateField({ type: "VALUE", value: event.target.value, item: item, index: index })}
-            />
+              <TextInput
+                name="name"
+                value={item?.value || ""}
+                onChange={(event) => handleUpdateField({ type: "VALUE", value: event.target.value, item: item, index: index })}
+              />
             </div>
           </LabelFieldPair>
         </Card>

@@ -3,6 +3,8 @@ import { BreadCrumb } from "@egovernments/digit-ui-components";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Switch } from "react-router-dom";
+import YourDetails from "./YourDetails";
+
 import Inbox from "./SampleInbox";
 import SearchWageSeeker from "./SampleSearch";
 import AdvancedCreate from "./SampleAdvancedSearch";
@@ -24,6 +26,7 @@ import SampleCreate from "./uiComponentsSample/SampleCreate";
 import SampleSearch from "./uiComponentsSample/SampleSearch";
 import SampleInbox from "./uiComponentsSample/SampleInbox";
 import SampleView from "./uiComponentsSample/SampleView";
+import Assignment from "./Assignment";
 
 const SampleBreadCrumbs = ({ location }) => {
   const { t } = useTranslation();
@@ -57,11 +60,12 @@ const App = ({ path, stateCode, userType, tenants }) => {
         <PrivateRoute path={`${path}/individual-search`} component={() => <IndividualSearch></IndividualSearch>} />
         <PrivateRoute path={`${path}/individual-view`} component={() => <IndividualViewDetails></IndividualViewDetails>} />
 
+
         <PrivateRoute path={`${path}/response`} component={() => <Response></Response>} />
 
         <PrivateRoute path={`${path}/sample-create`} component={() => <Create></Create>} />
-        <PrivateRoute path={`${path}/sample-search`} component={() => <SearchWageSeeker></SearchWageSeeker>} />    
-        <PrivateRoute path={`${path}/sample-view`} component={() =>  <ViewIndividual />} />
+        <PrivateRoute path={`${path}/sample-search`} component={() => <SearchWageSeeker></SearchWageSeeker>} />
+        <PrivateRoute path={`${path}/sample-view`} component={() => <ViewIndividual />} />
         <PrivateRoute path={`${path}/sample-components`} component={() => <SampleComponents />} />
         <PrivateRoute path={`${path}/sample-success`} component={() => <PanelCardResponse />} />
         <PrivateRoute path={`${path}/tab-search-individual`} component={() => <TabIndividualSearch />} />
@@ -74,6 +78,9 @@ const App = ({ path, stateCode, userType, tenants }) => {
         <PrivateRoute path={`${path}/search`} component={() => <SampleSearch />} />
         <PrivateRoute path={`${path}/inbox`} component={() => <SampleInbox />} />
         <PrivateRoute path={`${path}/view`} component={() => <SampleView />} />
+        <PrivateRoute path={`${path}/your-form`} component={() => <YourDetails />} />
+        <PrivateRoute path={`${path}/assignment`} component={() => <Assignment />} />
+
       </AppContainer>
     </Switch>
   );
