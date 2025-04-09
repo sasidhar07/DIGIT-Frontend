@@ -1,9 +1,10 @@
 /**
  * Utility function to convert a JSON schema into a config array for FormComposerV2
  * @param {Object} schema - JSON schema object
+ * @param {Array} components - List of component names
  * @returns {Array} config - Configuration array for FormComposerV2
  */
-export const schemaToConfig = (schema) => {
+export const schemaToConfig = (schema, components) => {
     if (!schema || !schema.properties) {
         throw new Error("Invalid schema: Schema or schema properties are missing");
     }
@@ -19,12 +20,12 @@ export const schemaToConfig = (schema) => {
 
         // Handle object type properties as separate sections
         if (property.type === "object") {
-            const section = createSection(propKey, property, isRequired, property.required || []);
+            const section = createSection(propKey, property, isRequired, components);
             if (section.body.length > 0) {
                 config.push(section);
             }
         }
-        // Handle special case for array items (like complaintType)
+        // Handle special case for array items
         else if (property.type === "array") {
             const section = createArraySection(propKey, property, isRequired);
             if (section) {
@@ -59,10 +60,10 @@ export const schemaToConfig = (schema) => {
  * @param {String} key - Property key 
  * @param {Object} property - Property schema
  * @param {Boolean} isParentRequired - Whether the parent object is required
- * @param {Array} requiredProps - Array of required property names within this object
+ * @param {Array} components - List of component names
  * @returns {Object} Section configuration
  */
-const createSection = (key, property, isParentRequired, requiredProps = []) => {
+const createSection = (key, property, isParentRequired, components) => {
     const section = {
         head: getHeadingFromKey(key),
         subHead: property.description || "",
@@ -74,7 +75,7 @@ const createSection = (key, property, isParentRequired, requiredProps = []) => {
     if (property.properties) {
         Object.keys(property.properties).forEach(nestedKey => {
             const nestedProp = property.properties[nestedKey];
-            const isRequired = isParentRequired && requiredProps.includes(nestedKey);
+            const isRequired = isParentRequired;
 
             const field = createField(`${key}.${nestedKey}`, nestedProp, isRequired);
 
@@ -83,20 +84,20 @@ const createSection = (key, property, isParentRequired, requiredProps = []) => {
             }
         });
     }
-
     // Handle special cases like component types
-    if (key === "complaintType" || key === "additionalDetails" || key === "sampleDetails") {
+    if (components.includes(key)) {
         section.body = [{
             isMandatory: isParentRequired,
             key: key,
             type: "component",
-            component: `Additional${capitalizeFirstLetter(key)}`,
+            component: capitalizeFirstLetter(key),
             withoutLabel: true,
             disable: false,
             customProps: {},
             populators: {
                 name: key,
-                required: property.required ? true : false
+                required: property.required ? true : false,
+                error: "Required"
             }
         }];
     }
@@ -118,16 +119,17 @@ const createArraySection = (key, property, isRequired) => {
         key: key,
         subHead: property.description || "",
         body: [{
-            isMandatory: isRequired,
+            isMandatory: false,
             key: key,
             type: "component",
-            component: `Additional${capitalizeFirstLetter(key)}`,
+            component: capitalizeFirstLetter(key),
             withoutLabel: true,
             disable: false,
             customProps: {},
             populators: {
                 name: key,
-                required: isRequired
+                required: isRequired,
+                error: "Required"
             }
         }]
     };
@@ -145,13 +147,12 @@ const createField = (key, property, isRequired) => {
     if (property.type === "object" || property.type === "array") {
         return null;
     }
-
     const field = {
         inline: true,
         label: getLabel(key),
         isMandatory: isRequired,
         key: key,
-        type: getFieldType(property),
+        type: getFieldType(property, key),
         populators: {
             name: key,
             error: getErrorMessage(key, property),
@@ -241,9 +242,10 @@ const getValidationRules = (property, isRequired) => {
 /**
  * Gets the appropriate field type from schema property
  * @param {Object} property - Property schema
+ * @param {String} key - Property key
  * @returns {String} Field type
  */
-const getFieldType = (property) => {
+const getFieldType = (property, key) => {
     switch (property.type) {
         case "string":
             if (property.format === "date" || property.description?.toLowerCase().includes("date")) {
@@ -251,17 +253,19 @@ const getFieldType = (property) => {
             } else if (property.description?.toLowerCase().includes("mobile") ||
                 property.description?.toLowerCase().includes("phone")) {
                 return "mobileNumber";
-            } else if (property.description?.toLowerCase().includes("address") ||
-                property.maxLength > 100) {
+            } else if (
+                (property.description?.toLowerCase().includes("address") || property.maxLength > 100) || key.toLowerCase().includes("address")
+            ) {
                 return "textarea";
             }
+
             return "text";
         case "number":
             if (property.description?.toLowerCase().includes("mobile") ||
                 property.description?.toLowerCase().includes("phone")) {
                 return "mobileNumber";
             }
-            return "number"
+            return "number";
         case "integer":
             return "number";
         case "boolean":

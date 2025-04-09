@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 
 const AdditionalComplaint = ({ onSelect, ...props }) => {
     const { t } = useTranslation();
-   
+
     const [documentData, setDocumentData] = useState([
         {
             key: 1,
@@ -77,11 +77,11 @@ const AdditionalComplaint = ({ onSelect, ...props }) => {
                                 <label >{`${t("Name")}`}</label>
                             </div>
                         </HeaderComponent>
-                            <TextInput
-                                name="name"
-                                value={item.name}
-                                onChange={(event) => handleUpdateField({ fieldType: "name", value: event.target.value, item: item })}
-                            />
+                        <TextInput
+                            name="name"
+                            value={item.name}
+                            onChange={(event) => handleUpdateField({ fieldType: "name", value: event.target.value, item: item })}
+                        />
                     </LabelFieldPair>
                 </Card>
             ))}

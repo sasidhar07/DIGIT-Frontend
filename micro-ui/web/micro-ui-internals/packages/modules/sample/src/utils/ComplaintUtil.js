@@ -1,7 +1,7 @@
 export const transformComplaintData = (data) => {
     return {
         Mdms: {
-            tenantId: "dev",
+            tenantId: data.tenantId,
             schemaCode: "Assignment.PGRAPPLY",
             uniqueIdentifier: null,
             data: {
@@ -10,8 +10,8 @@ export const transformComplaintData = (data) => {
                     isStepper: true
                 },
                 complaintType: data?.complaintType?.map((item) => ({
-                    code: item?.code || "",
-                    name: item?.name || ""
+                    code: item?.value || "",
+                    name: item?.type || ""
                 })) || [],
                 complaintLocation: {
                     city: data?.complaintLocation?.city || "",

@@ -33,7 +33,7 @@ const HRMSCreate = () => {
 
   // Function to handle form submission
   const onSubmit = async (data) => {
-    console.log(data, "data"); // Debug log of submitted form data
+    console.log(data, "data"); 
 
     await mutation.mutate(
       {
