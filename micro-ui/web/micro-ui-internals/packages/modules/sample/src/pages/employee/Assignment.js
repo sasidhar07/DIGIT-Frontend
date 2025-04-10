@@ -46,9 +46,6 @@ const Assignment = () => {
                 label={"Submit"}
                 config={configs}
                 defaultValues={{}}
-                onFormValueChange={(setValue, formData, formState, reset, setError, clearErrors, trigger, getValues) => {
-                    console.log(formData, "formData"); // Debug log when form values change
-                }}
                 onSubmit={onSubmit}
             />
             {toastData && (

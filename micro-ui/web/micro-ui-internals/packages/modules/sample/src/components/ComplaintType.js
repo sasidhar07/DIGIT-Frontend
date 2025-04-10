@@ -122,6 +122,8 @@ const ComplaintTypeComponent = ({ onSelect }) => {
                             </div>
                         </HeaderComponent>
                         <TextInput
+                            style={{ width: "100%" }}
+
                             name="complaintCode"
                             value={entry.value || ""}
                             onChange={(event) =>
